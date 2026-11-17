@@ -21,9 +21,9 @@ y = wine_data['quality']
 X_treino, X_teste, y_treino, y_teste = train_test_split(X, y, test_size = 0.3, random_state = 42)
 
 # Carrega o modelo treinado e o padronizador
-modelo_arquivo = 'modelo_dsa_v1.pkl'
-scaler_arquivo = 'scaler_dsa_v1.pkl'
-modelo_dsa_v1 = joblib.load(modelo_arquivo)
+modelo_arquivo = 'modelo_v1.pkl'
+scaler_arquivo = 'scaler_v1.pkl'
+modelo_v1 = joblib.load(modelo_arquivo)
 scaler = joblib.load(scaler_arquivo)
 
 # Padroniza os dados de teste
@@ -33,26 +33,26 @@ X_teste_scaled = scaler.transform(X_teste)
 np.random.seed(41)
 
 # Função para simular Data Drift
-def dsa_simula_data_drift(X, drift_factor):
+def simula_data_drift(X, drift_factor):
     drifted_X = X + np.random.normal(0, drift_factor, X.shape)
     return drifted_X
 
 # Simula Data Drift
-X_test_drifted = dsa_simula_data_drift(X_teste_scaled, drift_factor = 0.7)
+X_test_drifted = simula_data_drift(X_teste_scaled, drift_factor = 0.7)
 
 # Avaliar o modelo no conjunto de teste com Data Drift
-drifted_predictions = modelo_dsa_v1.predict(X_test_drifted)
+drifted_predictions = modelo_v1.predict(X_test_drifted)
 drifted_accuracy = accuracy_score(y_teste, drifted_predictions)
 
 # Função para monitorar o desempenho do modelo
-def dsa_monitora_performance_modelo(model, X_test, y_test):
+def monitora_performance_modelo(model, X_test, y_test):
     predictions = model.predict(X_test)
     accuracy = accuracy_score(y_test, predictions)
     return accuracy
 
 # Monitorar o desempenho do modelo antes e depois do drift
-pre_drift_accuracy = round(dsa_monitora_performance_modelo(modelo_dsa_v1, X_teste_scaled, y_teste), 2)
-post_drift_accuracy = round(dsa_monitora_performance_modelo(modelo_dsa_v1, X_test_drifted, y_teste), 2)
+pre_drift_accuracy = round(monitora_performance_modelo(modelo_v1, X_teste_scaled, y_teste), 2)
+post_drift_accuracy = round(monitora_performance_modelo(modelo_v1, X_test_drifted, y_teste), 2)
 
 print("\nProjeto 7 - Script 2 - Simulação de Data Drift e Avaliação do Modelo")
 

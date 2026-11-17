@@ -30,15 +30,15 @@ X_teste_scaled = scaler.transform(X_teste)
 np.random.seed(1000)
 
 # Função para simular Data Drift
-def dsa_simula_data_drift(X, drift_factor):
+def simula_data_drift(X, drift_factor):
     drifted_X = X + np.random.normal(0, drift_factor, X.shape)
     return drifted_X
 
 # Simula Data Drift
-X_test_drifted = dsa_simula_data_drift(X_teste_scaled, drift_factor = 0.7)
+X_test_drifted = simula_data_drift(X_teste_scaled, drift_factor = 0.7)
 
 # Estratégia de Mitigação: Re-treinar o modelo com dados atualizados e otimização de hiperparâmetros
-def dsa_retreina_modelo(X_train, y_train, X_new, y_new):
+def retreina_modelo(X_train, y_train, X_new, y_new):
 
     X_combined = np.vstack((X_train, X_new))
     y_combined = np.hstack((y_train, y_new))
@@ -52,10 +52,10 @@ def dsa_retreina_modelo(X_train, y_train, X_new, y_new):
     }
 
     # Cria um novo modelo
-    modelo_dsa = GradientBoostingClassifier(random_state = 42)
+    modelo = GradientBoostingClassifier(random_state = 42)
 
     # Aplica GridSearchCV para encontrar os melhores hiperparâmetros
-    grid_search = GridSearchCV(estimator = modelo_dsa, param_grid = param_grid, cv = 3, n_jobs = -1, verbose = 2)
+    grid_search = GridSearchCV(estimator = modelo, param_grid = param_grid, cv = 3, n_jobs = -1, verbose = 2)
     grid_search.fit(X_combined, y_combined)
 
     # Treina o modelo com os melhores hiperparâmetros
@@ -69,25 +69,25 @@ X_new_train, X_new_test, y_new_train, y_new_test = train_test_split(X_test_drift
 print("\nOtimização de Hiperparâmetros...\n")
 
 # Re-treina o modelo com os novos dados e otimização de hiperparâmetros
-modelo_dsa_v2 = dsa_retreina_modelo(X_treino_scaled, y_treino, X_new_train, y_new_train)
+modelo_v2 = retreina_modelo(X_treino_scaled, y_treino, X_new_train, y_new_train)
 
 # Função para monitorar o desempenho do modelo
-def dsa_monitora_performance_modelo(model, X_test, y_test):
+def monitora_performance_modelo(model, X_test, y_test):
     predictions = model.predict(X_test)
     accuracy = accuracy_score(y_test, predictions)
     return accuracy
 
 # Avalia o modelo re-treinado
-acuracia_pos_retreino = round(dsa_monitora_performance_modelo(modelo_dsa_v2, X_new_test, y_new_test), 2)
+acuracia_pos_retreino = round(monitora_performance_modelo(modelo_v2, X_new_test, y_new_test), 2)
 
 print("\nProjeto 7 - Script 4 - Estratégia de Mitigação de Data Drift")
 
 print("\nAcurácia Após Retreinamento do Modelo com Novos Dados e Otimização de Hiperparâmetros:", acuracia_pos_retreino)
 
 # Salva o modelo treinado e o padronizador
-modelo_arquivo = 'modelo_dsa_v3.pkl'
-scaler_arquivo = 'scaler_dsa_v3.pkl'
-joblib.dump(modelo_dsa_v2, modelo_arquivo)
+modelo_arquivo = 'modelo_v3.pkl'
+scaler_arquivo = 'scaler_v3.pkl'
+joblib.dump(modelo_v2, modelo_arquivo)
 joblib.dump(scaler, scaler_arquivo)
 
 print(f"\nModelo salvo: {modelo_arquivo}")

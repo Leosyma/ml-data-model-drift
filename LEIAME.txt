@@ -2,11 +2,11 @@
 
 # Abra o terminal ou prompt de comando, navegue até a pasta com os arquivos e execute o comando abaixo para criar um ambiente virtual:
 
-conda create --name dsadeploymlp7 python=3.13
+conda create --name model-drift python=3.13
 
 # Ative o ambiente:
 
-conda activate dsadeploymlp7 (ou: source activate dsadeploymlp7)
+conda activate model-drift (ou: source activate model-drift)
 
 # Instale o pip e as dependências:
 
@@ -24,7 +24,7 @@ python projeto7-parte5.py
 # Use os comandos abaixo para desativar o ambiente virtual e remover o ambiente (opcional):
 
 conda deactivate
-conda remove --name dsadeploymlp7 --all
+conda remove --name model-drift --all
 
 
 

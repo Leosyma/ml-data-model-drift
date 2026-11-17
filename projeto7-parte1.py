@@ -27,20 +27,20 @@ X_treino_scaled = scaler.fit_transform(X_treino)
 X_teste_scaled = scaler.transform(X_teste)
 
 # Treina o modelo inicial
-modelo_dsa_v1 = RandomForestClassifier(random_state = 42)
-modelo_dsa_v1.fit(X_treino_scaled, y_treino)
+modelo_v1 = RandomForestClassifier(random_state = 42)
+modelo_v1.fit(X_treino_scaled, y_treino)
 
 # Avalia o modelo no conjunto de teste inicial
-previsoes = modelo_dsa_v1.predict(X_teste_scaled)
+previsoes = modelo_v1.predict(X_teste_scaled)
 acuracia = round(accuracy_score(y_teste, previsoes), 2) * 100
 
 print("\nProjeto 7 - Script 1 - Treinamento Inicial do Modelo")
 print("\nAcurácia Inicial do Modelo (%):", acuracia)
 
 # Salva o modelo treinado e o padronizador
-modelo_arquivo = 'modelo_dsa_v1.pkl'
-scaler_arquivo = 'scaler_dsa_v1.pkl'
-joblib.dump(modelo_dsa_v1, modelo_arquivo)
+modelo_arquivo = 'modelo_v1.pkl'
+scaler_arquivo = 'scaler_v1.pkl'
+joblib.dump(modelo_v1, modelo_arquivo)
 joblib.dump(scaler, scaler_arquivo)
 
 print(f"\nModelo salvo: {modelo_arquivo}")
